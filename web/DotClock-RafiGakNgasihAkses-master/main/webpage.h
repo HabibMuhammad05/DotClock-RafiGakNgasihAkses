@@ -509,8 +509,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ---------------- APP.JS ----------------
 const char APP_JS[] PROGMEM = R"rawliteral(
-// app.js - UI handling, localStorage, send time & alarms
-const refreshMs = 1000; // 30s polling
+// app.js - UI handling, localStorage, send time, text & alarms
+const refreshMs = 1000; // polling interval (ms)
 
 function saveData(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch(e){}
@@ -519,21 +519,59 @@ function loadData(key, fallback = null) {
   try { const s = localStorage.getItem(key); return s? JSON.parse(s) : fallback; } catch(e){ return fallback; }
 }
 
-function openModal(id){ const m = document.getElementById(id); if(!m) return; m.classList.add('active'); const now=new Date();
+function openModal(id){ 
+  const m = document.getElementById(id); 
+  if(!m) return; 
+  m.classList.add('active'); 
+  const now=new Date();
   if(id==='timeModal') document.getElementById('timeInput').value = now.toTimeString().slice(0,5);
   if(id==='dateModal') document.getElementById('dateInput').value = now.toISOString().slice(0,10);
-  if(id==='alarmModal'){ document.getElementById('alarmInput').value = now.toTimeString().slice(0,5); document.getElementById('alarmModalTitle').textContent='Tambah Alarm'; }
+  if(id==='alarmModal'){ 
+    document.getElementById('alarmInput').value = now.toTimeString().slice(0,5);
+    document.getElementById('alarmModalTitle').textContent='Tambah Alarm';
+  }
 }
-function closeModal(id){ const m=document.getElementById(id); if(!m) return; m.classList.remove('active'); }
+function closeModal(id){ 
+  const m=document.getElementById(id); 
+  if(!m) return; 
+  m.classList.remove('active'); 
+}
 
-function submitTime(e){ e.preventDefault(); const t=document.getElementById('timeInput').value; let d=loadData('time_settings')||{}; d.custom_time=t; d.updated_at=new Date().toISOString(); saveData('time_settings', d); closeModal('timeModal'); }
-function submitDate(e){ e.preventDefault(); const dt=document.getElementById('dateInput').value; let d=loadData('time_settings')||{}; d.custom_date=dt; d.updated_at=new Date().toISOString(); saveData('time_settings', d); closeModal('dateModal'); }
+// ===== Time / Date submit (local + send to ESP helpers available below) =====
+function submitTime(e){ 
+  e.preventDefault(); 
+  const t=document.getElementById('timeInput').value; 
+  let d=loadData('time_settings')||{}; 
+  d.custom_time=t; 
+  d.updated_at=new Date().toISOString(); 
+  saveData('time_settings', d); 
+  closeModal('timeModal'); 
+}
+function submitDate(e){ 
+  e.preventDefault(); 
+  const dt=document.getElementById('dateInput').value; 
+  let d=loadData('time_settings')||{}; 
+  d.custom_date=dt; 
+  d.updated_at=new Date().toISOString(); 
+  saveData('time_settings', d); 
+  closeModal('dateModal'); 
+}
 
+// ===== Alarms (CRUD) =====
 let editingAlarmId = null;
-function submitAlarm(e){ e.preventDefault(); const t=document.getElementById('alarmInput').value; let alarms = loadData('alarms')||[];
-  if(editingAlarmId){ alarms = alarms.map(a => a.id===editingAlarmId ? {...a, alarm_time:t, updated_at:new Date().toISOString()} : a); }
-  else { alarms.push({ id: Date.now(), alarm_time: t, is_active: true, created_at: new Date().toISOString() }); }
-  saveData('alarms', alarms); editingAlarmId=null; closeModal('alarmModal'); loadAlarms();
+function submitAlarm(e){
+  e.preventDefault();
+  const t=document.getElementById('alarmInput').value;
+  let alarms = loadData('alarms')||[];
+  if(editingAlarmId){
+    alarms = alarms.map(a => a.id===editingAlarmId ? {...a, alarm_time:t, updated_at:new Date().toISOString()} : a);
+  } else {
+    alarms.push({ id: Date.now(), alarm_time: t, is_active: true, created_at: new Date().toISOString() });
+  }
+  saveData('alarms', alarms);
+  editingAlarmId=null;
+  closeModal('alarmModal');
+  loadAlarms();
 }
 
 function loadAlarms(){
@@ -555,6 +593,7 @@ function loadAlarms(){
 function editAlarm(id, time){ editingAlarmId = id; document.getElementById('alarmInput').value = time.slice(0,5); openModal('alarmModal'); }
 function deleteAlarm(id){ let alarms = loadData('alarms')||[]; alarms = alarms.filter(a=>a.id!==id); saveData('alarms', alarms); loadAlarms(); }
 
+// ===== Network helpers: send payloads to ESP endpoints =====
 async function sendTimeToESP(payload){
   try{
     const r = await fetch('/set_time', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
@@ -571,6 +610,15 @@ async function sendAlarmsToESP(alarms){
   }catch(e){ console.error('sendAlarmsToESP', e); return false; }
 }
 
+async function sendTextToESP(payload){
+  try{
+    const r = await fetch('/set_text', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return true;
+  }catch(e){ console.error('sendTextToESP', e); return false; }
+}
+
+// ===== Save actions that call above network helpers =====
 async function saveDateTime(){
   const now = new Date();
   const customTime = document.getElementById("timeInput").value || now.toTimeString().slice(0,5);
@@ -588,9 +636,30 @@ async function saveAlarms(){
   alert(ok? 'Alarm dikirim ke DOTclock ;)' : 'Gagal kirim alarm :(');
 }
 
+// ===== Custom text (placeholder) handling =====
+async function saveCustomText(){
+  const now = new Date();
+  const inputEl = document.getElementById('textInput');
+  if(!inputEl) { console.error('textInput not found'); return; }
+  // ambil value, jika kosong -> simpan string kosong (opsional)
+  const textValue = (inputEl.value||'').trim(); // kosong jika tidak diisi
+  const payload = { custom_text: textValue, updated_at: now.toISOString() };
+  saveData('text_settings', payload);
+  const ok = await sendTextToESP(payload);
+  alert(ok? 'Teks dikirim ke DOTclock ;)' : 'Teks tersimpan lokal, gagal kirim ke DOTclock :(');
+}
+
+// ===== Init =====
 document.addEventListener('DOMContentLoaded', ()=>{
+  // isi nilai input teks dari localStorage jika ada
+  const ts = loadData('text_settings') || {};
+  const textInputEl = document.getElementById('textInput');
+  if(textInputEl && ts.custom_text !== undefined){
+    textInputEl.value = ts.custom_text || '';
+  }
+
   loadAlarms();
-  // start polling sensor (update performed by suhu.js already at 1s)
+  // optional: polling atau fetch sensor
   setInterval(()=>{ /* optional: fetch('/getsensor') every 5s if you want */ }, refreshMs);
 });
 )rawliteral";
