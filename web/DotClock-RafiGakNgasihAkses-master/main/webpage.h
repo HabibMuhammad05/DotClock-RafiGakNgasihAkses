@@ -18,13 +18,14 @@ const char INDEX_HTML[] PROGMEM = R"rawliteral(
     <div class="container">
         <h1 class="title">DOTclock</h1>
         
-        <!-- Baterai Display -->
-        <div class = "baterai">
+        <!-- Text Display -->
+        <div class = "text">
             <div class="card">
-                <h2 class="label baterai-color">BATERAI</h2>
-                <div class="baterai-container">
-                    <span class="value baterai-color" id="baterai">-</span>
+                <h2 class="label text-color">Custom Text</h2>
+                <div class="text-container">
+                    <input type="text" id="textInput" placeholder="Opsional :v" />
                 </div>
+                <button class="submit-btn" onclick="saveCustomText()">Kirim</button>
             </div>
         </div>
 
