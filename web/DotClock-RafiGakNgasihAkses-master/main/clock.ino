@@ -14,7 +14,7 @@ float temp;
 float hum;
 char txtDHT[30];
 char monthNames[][5] = {"JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"};
-char namaHari[][7] =   {"MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "AHAD"}; // array hari, dihitung mulai dari senin, hari senin angka nya =0,
+char namaHari[][7] =   {"SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"}; // array hari, dihitung mulai dari senin, hari senin angka nya =0,
 char txtScroll[80];
 
 #include "fonts.h"
