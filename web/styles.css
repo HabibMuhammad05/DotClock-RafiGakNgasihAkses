@@ -1,0 +1,339 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fredoka One', cursive;
+}
+
+body {
+    min-height: 100vh;
+    background: #F0F0F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 28rem;
+}
+
+.title {
+    color: #171717;
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background: #F0F0F0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 8px solid #423F3E;
+}
+
+.icon {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 auto 0.5rem;
+    display: block;
+}
+
+.icon-lg {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.label {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.value {
+    font-size: 3rem;
+    text-align: center;
+}
+
+.temp-color {
+    color: #F33535;
+}
+
+.text-color{
+    color:#34656D
+}
+
+.humidity-color {
+    color: #0C74DA;
+}
+
+.clock-color {
+    color: #F4991A;
+}
+
+.calendar-color {
+    color: #004030;
+}
+
+.alarm-color {
+    color: #B6771D;
+}
+
+.section-title {
+    color: #171717;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.icon-button {
+    background: #F0F0F0;
+    border: 6px solid #423F3E;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button:hover {
+    background: #4b5563;
+}
+
+.icon-button span {
+    font-size: 1.125rem;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #423F3E;
+    color: #F9F5F0;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: #4b5563;
+}
+.setting-alarm-card {
+    margin-top: 1.5rem;
+}
+.dht-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.text{
+    margin-bottom: 1.5rem;
+    color:#34656D;
+}
+
+.text-container{
+    font-size: 50000px;
+    padding: 10px;
+    display:flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+#textInput {
+    font-size: 20px;
+    border-radius: 10px;     
+    padding: 12px 16px;   
+    height: 50px;         
+}
+
+.alarm-container {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.alarm-btn {
+    flex-shrink: 0;
+}
+
+.alarm-list {
+    flex: 1;
+    max-height: 10rem;
+    overflow-y: auto;
+}
+
+.alarm-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #423F3E;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.alarm-time {
+    color: #F9F5F0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-family: 'Fredoka One', cursive;
+    transition: color 0.3s;
+}
+
+.alarm-time:hover {
+    color: #F4CE14;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.3s;
+}
+
+.delete-btn:hover {
+    color: #ef4444;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #2B2B2B;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 24rem;
+    position: relative;
+    border: 2px solid #423F3E;
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #F9F5F0;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #F9F5F0;
+}
+
+.modal-title {
+    color: #F9F5F0;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.time-input {
+    width: 100%;
+    background: #2B2B2B;
+    color: #F9F5F0;
+    border: 2px solid #423F3E;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-family: 'Fredoka One', cursive;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: #F9F5F0;
+}
+
+.alarm-list::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.alarm-list::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 0.25rem;
+}
+
+.alarm-list::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 0.25rem;
+}
+
+.alarm-list::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+@media (max-width: 640px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .value {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .value {
+        font-size: 1.75rem;
+    }
+
+    .label {
+        font-size: 1rem;
+    }
+
+    .icon-button span {
+        font-size: 1rem;
+    }
+}
