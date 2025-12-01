@@ -2,7 +2,7 @@
 #include <ESP8266WiFi.h>
 
 // SSID & password sesuai permintaan
-const char* ap_ssid = "DOTclock1";
+const char* ap_ssid = "DOTclock3";
 const char* ap_pass = "12345678";
 
 void startAP() {

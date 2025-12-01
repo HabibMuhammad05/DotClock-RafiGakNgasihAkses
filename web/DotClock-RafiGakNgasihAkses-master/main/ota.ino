@@ -4,7 +4,7 @@
 #include <ESP8266mDNS.h>
 #include "rtc_eeprom.h"
 
-const char* ota_hostname = "DOTclock";
+const char* ota_hostname = "DOTclock3";
 const char* ota_password = "12345678";
 
 void setupOTA() {

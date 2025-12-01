@@ -16,6 +16,7 @@ long clkTime = 0;
 int dx=0;
 int dy=0;
 byte del=0;
+int xPos, yPos;
 
 
 
@@ -237,4 +238,35 @@ void printStringWithShift(const char* s, int shiftDelay){
     printCharWithShift(*s, shiftDelay);
     s++;
   }
+}
+int printCharX(char ch, const uint8_t *font, int x){
+  int fwd = pgm_read_byte(font);
+  int fht = pgm_read_byte(font+1);
+  int offs = pgm_read_byte(font+2);
+  int last = pgm_read_byte(font+3);
+  if(ch<offs || ch>last) return 0;
+  ch -= offs;
+  int fht8 = (fht+7)/8;
+  font+=4+ch*(fht8*fwd+1);
+  int j,i,w = pgm_read_byte(font);
+  for(j = 0; j < fht8; j++) {
+    for(i = 0; i < w; i++) scr[x+LINE_WIDTH*(j+yPos)+i] = pgm_read_byte(font+1+fht8*i+j);
+    if(x+i<LINE_WIDTH) scr[x+LINE_WIDTH*(j+yPos)+i]=0;
+  }
+  return w;
+}
+
+void printChar(unsigned char c, const uint8_t *font){
+  if(xPos>NUM_MAX*8) return;
+  int w = printCharX(c, font, xPos);
+  xPos+=w+1;
+}
+
+void printString(const char *s, const uint8_t *font){
+  while(*s) printChar(*s++, font);
+  //refreshAll();
+}
+
+void printString(String str, const uint8_t *font){
+  printString(str.c_str(), font);
 }
