@@ -219,7 +219,7 @@ body {
     color: #F33535;
 }
 
-.baterai-color{
+.text-color{
     color:#34656D
 }
 
@@ -294,15 +294,24 @@ body {
     align-items: center;
     justify-content: center;
 }
-.baterai{
+.text{
     margin-bottom: 1.5rem;
     color:#34656D;
 }
 
-.baterai-container{
+.text-container{
+    padding: 10px;
     display:flex;
+    gap: 1rem;
     align-items: center;
     justify-content: center;
+    margin-bottom: 1rem;
+}
+#textInput {
+    font-size: 15px;
+    border-radius: 10px;     
+    padding: 12px 16px;   
+    height: 50px;         
 }
 
 .alarm-container {
